@@ -6,6 +6,8 @@ import androidx.core.app.ShareCompat;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -14,6 +16,8 @@ public class MainActivity extends AppCompatActivity {
      private EditText mWebsiteEditText;
      private EditText mLocationEditText;
      private EditText mShareTextEditText;
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,20 +29,18 @@ public class MainActivity extends AppCompatActivity {
         mShareTextEditText = findViewById(R.id.share_edittext);
 
 
-    }
 
+    }
     public void openWebsite(View view) {
         String url = mWebsiteEditText.getText().toString();
         Uri webpage = Uri.parse(url);
         Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
+        } else {
+            Log.d("ImplicitIntents", "Can't handle this intent!");
         }
-        else {
-                Log.d("ImplicitIntents", "Can't handle this!");
-            }
-        }
-
+    }
 
     public void openLocation(View view) {
         String loc = mLocationEditText.getText().toString();
@@ -64,5 +66,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
+    public void picture(View view) {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
 }
